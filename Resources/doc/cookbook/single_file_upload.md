@@ -34,10 +34,11 @@ Entity will be generated in `src/Acme/ProductBundle/Entity/Product.php`.
 * Open the generated ``Product.php`` file and add few annotations to it. 
 
 ```php
-...
+//...
 namespace Acme\ProductBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
@@ -47,6 +48,36 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  * @ORM\Entity
  * @Vich\Uploadable
  */
- ...
+ //...
  ```
+ 
+ Insert the following field definition somewhere in the Product entity:
+ 
+```php
+//...
+    /**
+     * @Assert\File(
+     *     maxSize="10M",
+     *     mimeTypes={"image/png", "image/jpeg", "image/pjpeg"}
+     * )
+     * @Vich\UploadableField(mapping="product_image", fileNameProperty="imageName")
+     *
+     * @var File $image
+     */
+    protected $image;    
+//...
+```
 
+Create or update the database schema using the doctrine:schema commands.
+
+### 4. Running admin:generate-admin
+Run the `admin:generate-admin` command to generate admin GUI in the existing AcmeProductBundle bundle with the following parameters:
+* **Bundle namespace:** Acme\ProductBundle
+* **Model name [YourModel]:** Product
+* **Bundle name [AcmeProductBundle]:** accept the default value
+* **Target directory:** accept the default value
+* **Prefix of yaml:** product
+
+Let the generator update your routing.yml file so that the auto-generated admin interface will be available at the `/admin/acme_product_bundle/product/` URL. Visit the URL and try adding a new product. You can only manually enter the file name but no upload widget is available. Actually, it will take few additional steps to make it work.
+
+### 5. 
