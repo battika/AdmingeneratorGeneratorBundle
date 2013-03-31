@@ -3,9 +3,9 @@ This cookbook entry demonstrates how to use the single file upload feature. We s
 In this example we will create a new entity called Product with some basic fields including the name of the image that contains a picture of the product. Using the generated admin interface the user will be able to upload a new image and assign it to the product.
 
 ### 1. Basic configuration
-[VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle) requires some basic configration steps. As we want to keep this example simple we will use the simplest setup with Doctrine ORM used for entities and local file system for storing image files. For advanced settings see the [official documentation](https://github.com/dustin10/VichUploaderBundle/blob/master/Resources/doc/index.md).
+[VichUploaderBundle](https://github.com/dustin10/VichUploaderBundle) requires some basic configration steps. We want to keep this example simple so we will use a very simplistic setup with Doctrine ORM used for managing entities and local file system for storing image files. For advanced configuration options see the [official documentation](https://github.com/dustin10/VichUploaderBundle/blob/master/Resources/doc/index.md).
 
-Add the following configuration to the `app/config.yml` file:
+Add the following configuration to the `app/config.yml` file. This creates a mapping for `product_image` and specifies the destination directory where images will be stored.
 ```yaml
 vich_uploader:
     db_driver: orm
@@ -13,7 +13,6 @@ vich_uploader:
         product_image:
             upload_destination: %kernel.root_dir%/../web/images/products
 ```
-As you can see we have just created a mapping for product_image and specified the destination directory where images will be stored.
 
 Add the following line to the `admingenerator_generator` section:
 ```yaml
@@ -74,10 +73,11 @@ Create or update the database schema using the doctrine:schema commands.
 Run the `admin:generate-admin` command to generate admin GUI in the existing AcmeProductBundle bundle with the following parameters:
 * **Bundle namespace:** Acme\ProductBundle
 * **Model name [YourModel]:** Product
-* **Bundle name [AcmeProductBundle]:** accept the default value
-* **Target directory:** accept the default value
+* **Bundle name [AcmeProductBundle]:** accept default value
+* **Target directory:** accept default value
 * **Prefix of yaml:** product
 
 Let the generator update your routing.yml file so that the auto-generated admin interface will be available at the `/admin/acme_product_bundle/product/` URL. Visit the URL and try adding a new product. You can only manually enter the file name but no upload widget is available. Actually, it will take few additional steps to make it work.
 
-### 5. 
+### 5. Customizing generator.yml
+Generator created a new YAML file called `Product-generator.yml` in the `src/Acme/ProductBundle/Resources/config` directory. This is the configuration file of the admin generator that needs to be further customized.
